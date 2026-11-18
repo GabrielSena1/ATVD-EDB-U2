@@ -23,44 +23,59 @@ struct Pilha {
 };
 
 Pilha *pilha_criar(void) {
-    /* TODO */
-    return NULL;
+    Pilha *p = malloc(sizeof *p);
+    if (p == NULL)
+        return NULL;
+    p->cap = 8;
+    p->n = 0;
+    p->itens = malloc(p->cap * sizeof *p->itens);
+    if (p->itens == NULL) {
+        free(p);
+        return NULL;
+    }
+    return p;
 }
 
 void pilha_destruir(Pilha *p) {
-    /* TODO */
-    (void)p;
+    if (p == NULL)
+        return;
+    free(p->itens);
+    free(p);
 }
 
 int pilha_tamanho(const Pilha *p) {
-    /* TODO */
-    (void)p;
-    return 0;
+    return p->n;
 }
 
 int pilha_vazia(const Pilha *p) {
-    /* TODO */
-    (void)p;
-    return 1;
+    return p->n == 0;
 }
 
 int pilha_empilhar(Pilha *p, Voo x) {
-    /* TODO */
-    (void)p;
-    (void)x;
-    return 0;
+    if (p->n == p->cap) {
+        int novo_cap = p->cap * 2;
+        Voo *novo = realloc(p->itens, novo_cap * sizeof *novo);
+        if (novo == NULL)
+            return 0;
+        p->itens = novo;
+        p->cap = novo_cap;
+    }
+    p->itens[p->n] = x;
+    p->n++;
+    return 1;
 }
 
 int pilha_desempilhar(Pilha *p, Voo *x) {
-    /* TODO */
-    (void)p;
-    (void)x;
-    return 0;
+    if (p->n == 0)
+        return 0;
+    p->n--;
+    *x = p->itens[p->n];
+    return 1;
 }
 
 int pilha_topo(const Pilha *p, Voo *x) {
-    /* TODO */
-    (void)p;
-    (void)x;
-    return 0;
+    if (p->n == 0)
+        return 0;
+    *x = p->itens[p->n - 1];
+    return 1;
 }
