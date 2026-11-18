@@ -30,44 +30,66 @@ struct Fila {
 };
 
 Fila *fila_criar(void) {
-    /* TODO */
-    return NULL;
+    Fila *f = malloc(sizeof *f);
+    if (f == NULL)
+        return NULL;
+    f->inicio = NULL;
+    f->fim = NULL;
+    f->n = 0;
+    return f;
 }
 
 void fila_destruir(Fila *f) {
-    /* TODO */
-    (void)f;
+    if (f == NULL)
+        return;
+    No *no = f->inicio;
+    while (no != NULL) {
+        No *prox = no->prox;
+        free(no);
+        no = prox;
+    }
+    free(f);
 }
 
 int fila_tamanho(const Fila *f) {
-    /* TODO */
-    (void)f;
-    return 0;
+    return f->n;
 }
 
 int fila_vazia(const Fila *f) {
-    /* TODO */
-    (void)f;
-    return 1;
+    return f->n == 0;
 }
 
 int fila_enfileirar(Fila *f, Voo x) {
-    /* TODO */
-    (void)f;
-    (void)x;
-    return 0;
+    No *novo = malloc(sizeof *novo);
+    if (novo == NULL)
+        return 0;
+    novo->item = x;
+    novo->prox = NULL;
+    if (f->fim == NULL)
+        f->inicio = novo;
+    else
+        f->fim->prox = novo;
+    f->fim = novo;
+    f->n++;
+    return 1;
 }
 
 int fila_desenfileirar(Fila *f, Voo *x) {
-    /* TODO */
-    (void)f;
-    (void)x;
-    return 0;
+    if (f->n == 0)
+        return 0;
+    No *alvo = f->inicio;
+    *x = alvo->item;
+    f->inicio = alvo->prox;
+    if (f->inicio == NULL)
+        f->fim = NULL;
+    free(alvo);
+    f->n--;
+    return 1;
 }
 
 int fila_frente(const Fila *f, Voo *x) {
-    /* TODO */
-    (void)f;
-    (void)x;
-    return 0;
+    if (f->n == 0)
+        return 0;
+    *x = f->inicio->item;
+    return 1;
 }
