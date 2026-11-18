@@ -1,0 +1,5 @@
+torre
+torre.exe
+*.dSYM/
+*.o
+.DS_Store
