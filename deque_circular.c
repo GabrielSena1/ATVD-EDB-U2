@@ -26,65 +26,97 @@ struct Deque {
 };
 
 Deque *deque_criar(void) {
-    /* TODO */
-    return NULL;
+    Deque *d = malloc(sizeof *d);
+    if (d == NULL)
+        return NULL;
+    d->cap = 4;
+    d->ini = 0;
+    d->n = 0;
+    d->itens = malloc(d->cap * sizeof *d->itens);
+    if (d->itens == NULL) {
+        free(d);
+        return NULL;
+    }
+    return d;
 }
 
 void deque_destruir(Deque *d) {
-    /* TODO */
-    (void)d;
+    if (d == NULL)
+        return;
+    free(d->itens);
+    free(d);
 }
 
 int deque_tamanho(const Deque *d) {
-    /* TODO */
-    (void)d;
-    return 0;
+    return d->n;
 }
 
 int deque_vazio(const Deque *d) {
-    /* TODO */
-    (void)d;
+    return d->n == 0;
+}
+
+/* copia os itens na ordem logica para um bloco de capacidade dobrada */
+static int deque_crescer(Deque *d) {
+    int novo_cap = d->cap * 2;
+    Voo *novo = malloc(novo_cap * sizeof *novo);
+    if (novo == NULL)
+        return 0;
+    for (int i = 0; i < d->n; i++)
+        novo[i] = d->itens[(d->ini + i) % d->cap];
+    free(d->itens);
+    d->itens = novo;
+    d->cap = novo_cap;
+    d->ini = 0;
     return 1;
 }
 
 int deque_inserir_inicio(Deque *d, Voo x) {
-    /* TODO */
-    (void)d;
-    (void)x;
-    return 0;
+    if (d->n == d->cap && !deque_crescer(d))
+        return 0;
+    d->ini = (d->ini - 1 + d->cap) % d->cap;
+    d->itens[d->ini] = x;
+    d->n++;
+    return 1;
 }
 
 int deque_inserir_fim(Deque *d, Voo x) {
-    /* TODO */
-    (void)d;
-    (void)x;
-    return 0;
+    if (d->n == d->cap && !deque_crescer(d))
+        return 0;
+    int fim = (d->ini + d->n) % d->cap;
+    d->itens[fim] = x;
+    d->n++;
+    return 1;
 }
 
 int deque_remover_inicio(Deque *d, Voo *x) {
-    /* TODO */
-    (void)d;
-    (void)x;
-    return 0;
+    if (d->n == 0)
+        return 0;
+    *x = d->itens[d->ini];
+    d->ini = (d->ini + 1) % d->cap;
+    d->n--;
+    return 1;
 }
 
 int deque_remover_fim(Deque *d, Voo *x) {
-    /* TODO */
-    (void)d;
-    (void)x;
-    return 0;
+    if (d->n == 0)
+        return 0;
+    int fim = (d->ini + d->n - 1) % d->cap;
+    *x = d->itens[fim];
+    d->n--;
+    return 1;
 }
 
 int deque_primeiro(const Deque *d, Voo *x) {
-    /* TODO */
-    (void)d;
-    (void)x;
-    return 0;
+    if (d->n == 0)
+        return 0;
+    *x = d->itens[d->ini];
+    return 1;
 }
 
 int deque_ultimo(const Deque *d, Voo *x) {
-    /* TODO */
-    (void)d;
-    (void)x;
-    return 0;
+    if (d->n == 0)
+        return 0;
+    int fim = (d->ini + d->n - 1) % d->cap;
+    *x = d->itens[fim];
+    return 1;
 }
